@@ -41,7 +41,8 @@ const fetchFeedPosts = async (req,res) => {
 const fetchUserPost = async (req,res) => {
     try {
         const {id} = req.params
-        const posts = await Post.find({userId: id}).sort(-1)
+        console.log('single-user-post',id)
+        const posts = await Post.find({userId: id}).sort({createdAt:-1})
         res.status(200).json(posts)
     } catch (err) {
         res.status(400).json({message: err.message})

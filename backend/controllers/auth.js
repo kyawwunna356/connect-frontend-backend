@@ -36,7 +36,8 @@ const register = async (req,res) => {
         res.status(200).json({token,user})
    } 
    catch (error) {
-        res.status(400).json({message: error.message})
+        console.log(error)
+        res.status(400).json(error)
    }
 
 }
@@ -58,7 +59,7 @@ const login = async (req,res) => {
         delete user.password,
         res.status(200).json({token,user})
    } catch (error) {
-        res.status(500).json({message: error.message})
+        res.status(500).json(error)
    }
 
 }
