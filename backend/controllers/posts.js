@@ -19,10 +19,10 @@ const createPost = async (req,res) => {
         comments: [],
         profilePath: user.imagePath,
     })
-        res.status(201).json(post)
+        return res.status(201).json(post)
     
     } catch (err) {
-        res.status(409).json({message: err.message})
+        return res.status(409).json({message: err.message})
     }
 }
 
@@ -30,9 +30,9 @@ const createPost = async (req,res) => {
 const fetchFeedPosts = async (req,res) => {
     try {
         const posts = await Post.find().sort({createdAt:-1})
-        res.status(200).json(posts)
+        return res.status(200).json(posts)
     } catch (err) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
 }
 
@@ -43,9 +43,9 @@ const fetchUserPost = async (req,res) => {
         const {id} = req.params
         console.log('single-user-post',id)
         const posts = await Post.find({userId: id}).sort({createdAt:-1})
-        res.status(200).json(posts)
+        return res.status(200).json(posts)
     } catch (err) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
     
  
@@ -64,20 +64,44 @@ const toggleLikePost = async (req,res) => {
             post.likes.set(userId ,true)
         }
         await post.save()
-        res.status(200).json(post)
+        return res.status(200).json(post)
     } catch (err) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
 }
 
 const writeComment = async (req,res) => {
     try{
-        
+        console.log('this reunfdf')
+        const {id} = req.params
+        const {userId,text} = req.body
+        const post = await Post.findById(id)
+        const user = await User.findById(userId)
+        post.comments.push({
+            userId,
+            text,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profilePath: user.imagePath
+        })
+        await post.save()
+        return res.status(200).json(post)
     } catch (err) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
+    }
+}
+
+
+const deletePost = async (req,res) => {
+    try {
+        const {id} = req.params
+        const post = await Post.findByIdAndDelete(id)
+        return res.status(200).json(post)
+    } catch (err) {
+        return res.status(400).json({message: err.message})
     }
 }
 
 
 
-module.exports = {createPost,fetchUserPost,fetchFeedPosts,toggleLikePost,writeComment}
+module.exports = {createPost,fetchUserPost,fetchFeedPosts,toggleLikePost,writeComment,deletePost}

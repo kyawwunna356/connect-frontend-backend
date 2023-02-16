@@ -65,10 +65,7 @@ app.use('/conversation',conversationRoutes)
 app.use('/message',messageRoutes)
 
 
-// connect to database
-mongoose.connect(process.env.MONGO_URL)
-    .then(httpServer.listen(process.env.PORT, () => console.log(`listening on port: ${process.env.PORT}`)))
-    .catch(err => console.log(err))
+
 
 
 //////////////////////////// socket  section   //////////////////////////
@@ -106,3 +103,10 @@ io.on("connection", (socket) => {
     })
     
   });
+
+
+
+  // connect to database
+mongoose.connect(process.env.MONGO_URL)
+.then(httpServer.listen(process.env.PORT, () => console.log(`listening on port: ${process.env.PORT}`)))
+.catch(err => console.log(err))

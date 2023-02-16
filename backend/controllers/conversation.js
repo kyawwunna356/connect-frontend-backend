@@ -1,4 +1,5 @@
 const Conversation = require("../models/Conversation")
+const Message = require("../models/Message")
 
 //get
 const getConversations = async (req,res) => {
@@ -9,7 +10,7 @@ const getConversations = async (req,res) => {
         return res.status(200).json(conversations)
         
     } catch (error) {
-        res.status(400).json({message: error.message})
+        return res.status(400).json({message: error.message})
     }
 }
 
@@ -19,26 +20,27 @@ const createConversation = async (req,res) => {
     try {
         const exist = await Conversation.find({ members : { '$all' : [userId, friendId] }})
         if(exist.length > 0){
-            res.status(400).json('conversation exists')
-            return
+            return res.status(400).json('conversation exists')
+            
         }
         let conversation = await Conversation.create({
             members: [friendId,userId]
         })
         conversation = await conversation.populate('members', '-password -friends')
-        res.status(200).json(conversation)
+        return res.status(200).json(conversation)
     } catch (error) {
-        res.status(400).json({message: error.message})
+        return res.status(400).json({message: error.message})
     }
 }
 
 const deleteConversation = async (req,res) => {
     const {converId} = req.params
     try {
+        await Message.deleteMany({conversation_id: converId })
         const conversation = await Conversation.findByIdAndDelete(converId)
-        res.status(200).json(conversation)
+        return res.status(200).json(conversation)
     } catch (error) {
-        res.status(400).json({message: error.message})
+        return res.status(400).json({message: error.message})
     }
 }
 

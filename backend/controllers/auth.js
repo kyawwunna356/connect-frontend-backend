@@ -32,12 +32,12 @@ const register = async (req,res) => {
             viewedProfile: Math.floor(Math.random() * 1000)
         })
         const token = await jwt.sign({id: user._id},process.env.SECRET_KEY,{expiresIn: '3d'})
-        delete user.password,
-        res.status(200).json({token,user})
+        delete user.password
+        return res.status(200).json({token,user})
    } 
    catch (error) {
         console.log(error)
-        res.status(400).json(error)
+        return res.status(400).json(error)
    }
 
 }
@@ -47,19 +47,19 @@ const login = async (req,res) => {
    
         const {email,password} = req.body
         const user = await User.findOne({email});
-        if(!user) res.status(400).json({message: "User not found"})
+        if(!user) return res.status(400).json({message: "User not found"})
 
         const match = await bcrypt.compare(password,user.password)
-        if(!match) res.status(400).json({message: "credentials do not match"})
+        if(!match) return res.status(400).json({message: "credentials do not match"})
 
         const token = await jwt.sign({id: user._id},process.env.SECRET_KEY,{expiresIn: '3d'})
      //    user.friends.push('6392dbc2dee88e36feefa115')
      //    await user.save()
         
-        delete user.password,
-        res.status(200).json({token,user})
+        delete user.password
+        return res.status(200).json({token,user})
    } catch (error) {
-        res.status(500).json(error)
+        return res.status(500).json(error)
    }
 
 }

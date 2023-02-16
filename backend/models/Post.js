@@ -15,10 +15,10 @@ const commentSchema = mongoose.Schema({
     },
     profilePath: String,
     text: String,
-    likes: {
-        type: Map,
-        of: Boolean,
-    }
+    // likes: {
+    //     type: Map,
+    //     of: Boolean,
+    // }
 })
 
 const postSchema = mongoose.Schema({

@@ -5,9 +5,9 @@ const getMessage = async (req,res) => {
     const {conversation_id} = req.params
     try {
         const messages = await Message.find({conversation_id})
-        res.status(200).json(messages)
+        return res.status(200).json(messages)
     } catch (error) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
     
 }
@@ -20,9 +20,9 @@ const sendMessage = async (req,res) => {
     console.log(message,sender)
     try {
         const createdMessage = await Message.create({conversation_id,sender,message})
-        res.status(200).json(createdMessage)
+        return res.status(200).json(createdMessage)
     } catch (error) {
-        res.status(400).json({message: err.message})
+        return res.status(400).json({message: err.message})
     }
 }
 

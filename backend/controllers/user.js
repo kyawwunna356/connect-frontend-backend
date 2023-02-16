@@ -5,12 +5,12 @@ const getUser = async (req,res) => {
     const {id} = req.params
     console.log(id)
     const user = await User.findById(id).populate('friends','-password -friends')
-    res.status(200).json(user)
+    return res.status(200).json(user)
 }
 
 const getAllUsers = async (req,res) => {
     const users = await User.find()
-    res.status(200).json(users)
+    return res.status(200).json(users)
 }
 
 const addRemoveFriends = async (req,res) => {
@@ -29,10 +29,19 @@ const addRemoveFriends = async (req,res) => {
     await user.save()
     await friend.save()
     const userwithFriendsPopulated = await User.findById(id).populate('friends','-password -friends')
-    res.status(200).json(userwithFriendsPopulated.friends)
+    return res.status(200).json(userwithFriendsPopulated.friends)
 
 }
 
 
+const findUsers = async (req,res) => {
+    const {name} = req.query
+    console.log(name)
+    const regexp = new RegExp("^"+ name);
+    const user = await User.find({firstName: regexp})
+    return res.status(200).json(user)
+}
 
-module.exports = {getUser,addRemoveFriends,getAllUsers}
+
+
+module.exports = {getUser,addRemoveFriends,getAllUsers,findUsers}
