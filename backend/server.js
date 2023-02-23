@@ -31,7 +31,7 @@ const httpServer = createServer(app);
 //initilize socket.io
 const io = new Server(httpServer, { 
     cors: {
-        origin: "http://localhost:3000"
+        origin: "https://connect-app-frontend.vercel.app"
     } 
 });
 
